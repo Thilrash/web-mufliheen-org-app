@@ -1,0 +1,66 @@
+name: Build, Push, and Deploy Mufliheen Web App
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-push-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the code
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Node.js environment
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18' # Use the Node.js version that Angular requires
+
+      # Step 3: Install dependencies
+      - name: Install Dependencies
+        run: npm install
+
+      # Step 4: Build the Angular app
+      - name: Build Angular App
+        run: npm run build -- --output-path=dist
+
+      # Step 5: Push dist folder to master branch
+      - name: Push Dist Folder to Master
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git add dist
+          git commit -m "Add build files to dist folder - Build ID: $GITHUB_RUN_ID"
+          git push origin master
+        if: success() # Only runs if the previous steps are successful
+
+      # Step 6: FTP Deploy dist folder
+      - name: FTP Deploy
+        uses: SamKirkland/FTP-Deploy-Action@4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME_UAT }}
+          password: ${{ secrets.FTP_PASSWORD_UAT }}       
+
+      # Step 7: Generate Deployment Notes
+      - name: Generate Deployment Notes
+        run: |
+          echo "## Deployment Details" > deploy-notes.md
+          echo "Build ID: $GITHUB_RUN_ID" >> deploy-notes.md
+          echo "Merge Commit: ${{ github.sha }}" >> deploy-notes.md
+          echo "Deployed by: ${{ github.actor }}" >> deploy-notes.md
+          echo "Date: $(date)" >> deploy-notes.md
+
+      # Step 8: Commit and Push Deployment Notes
+      - name: Commit and Push Deployment Notes
+        run: |
+          git add deploy-notes.md
+          git commit -m "Add deployment notes for Build ID: $GITHUB_RUN_ID"
+          git push origin master
+        if: success() # Only runs if the previous steps are successful
+
+      
