@@ -28,7 +28,7 @@ jobs:
       - name: Build Angular App
         run: npm run build -- --output-path=dist
 
-      # Optional: List contents of the dist folder for verification
+      # Optional: 5 List contents of the dist folder for verification
       - name: List Dist Folder
         run: ls -al dist
 
@@ -37,7 +37,10 @@ jobs:
     needs: Build # This job will only run after the 'push_dist' job completes successfully
 
     steps:
-      # Step 6: FTP Deploy dist folder
+      # Step 6: FTP Deploy all files
+      - uses: actions/checkout@v4
+        with:
+            fetch-depth: 2
       - name: FTP Deploy
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
