@@ -1,0 +1,33 @@
+name: Build Angular App
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the code
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Node.js environment
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18' # Use the Node.js version that Angular requires
+
+      # Step 3: Install dependencies
+      - name: Install Dependencies
+        run: npm install
+
+      # Step 4: Build the Angular app
+      - name: Build Angular App
+        run: npm run build -- --output-path=dist
+
+      # Optional: List contents of the dist folder for verification
+      - name: List Dist Folder
+        run: ls -al dist
