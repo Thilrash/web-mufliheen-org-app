@@ -44,8 +44,6 @@ jobs:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: dist
-          remote-dir: /path/to/your/remote/folder # Set your FTP destination path
 
   Documentation:
     runs-on: ubuntu-latest
