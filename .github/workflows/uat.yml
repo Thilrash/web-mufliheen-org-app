@@ -33,7 +33,15 @@ jobs:
     needs: build # This job will only run after the 'build' job completes successfully
 
     steps:
-      # Step 5: Push dist folder to master branch
+      # Step 5.1: Check out the code (you may already have this in your build job)
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+      
+      # Step 5.2: Ensure we're in the correct directory
+      - name: Change Directory to Repository Root
+        run: cd $GITHUB_WORKSPACE
+    
+      # Step 5.3: Push dist folder to master branch
       - name: Push Dist Folder to Master
         run: |
           git config --local user.name "github-actions[bot]"
