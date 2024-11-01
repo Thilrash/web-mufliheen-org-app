@@ -60,7 +60,6 @@ jobs:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME_UAT }}
           password: ${{ secrets.FTP_PASSWORD_UAT }}
-          local-dir: .
 
   Documentation:
     runs-on: ubuntu-latest
