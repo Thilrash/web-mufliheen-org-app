@@ -58,11 +58,3 @@ jobs:
           echo "Merge Commit: ${{ github.sha }}" >> deploy-notes.md
           echo "Deployed by: ${{ github.actor }}" >> deploy-notes.md
           echo "Date: $(date)" >> deploy-notes.md
-
-      # Step 8: Commit and Push Deployment Notes
-      - name: Commit and Push Deployment Notes
-        run: |
-          git add deploy-notes.md
-          git commit -m "Add deployment notes for Build ID: $GITHUB_RUN_ID"
-          git push origin master
-        if: success() # Only runs if the previous steps are successful
